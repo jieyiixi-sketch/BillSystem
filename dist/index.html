@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CableFlow — Quotation & Invoice</title>
+  <meta name="description" content="Create professional quotations, invoices and cash sales for cable installation work.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <aside class="sidebar no-print">
+    <div class="brand"><span>CF</span><div>CableFlow<small>Document System</small></div></div>
+    <button type="button" class="primary" id="newDoc">＋ New document</button>
+    <nav>
+      <button type="button" class="active" data-view="editor">▣ Current document</button>
+      <button type="button" data-view="records">◫ Saved documents <b id="recordCount">0</b></button>
+      <button type="button" data-view="settings">⚙ Company settings</button>
+    </nav>
+    <p class="storage-note">Data is saved in this browser.</p>
+  </aside>
+
+  <main>
+    <header class="topbar no-print">
+      <div><h1 id="pageTitle">New Quotation</h1><p id="saveState">Not saved yet</p></div>
+      <div class="actions">
+        <button type="button" id="duplicate">Duplicate</button>
+        <button type="button" id="print">Print / PDF</button>
+        <button type="button" class="primary" id="save">Save document</button>
+      </div>
+    </header>
+
+    <section id="editor" class="view active">
+      <div class="convert no-print">
+        <label>Document type
+          <select id="docType"><option>Quotation</option><option>Invoice</option><option>Cash Sales</option></select>
+        </label>
+        <button type="button" id="convertInvoice">Convert to Invoice</button>
+        <button type="button" id="convertCash">Convert to Cash Sales</button>
+      </div>
+
+      <article class="paper">
+        <div class="doc-head">
+          <div class="company">
+            <img class="company-logo" id="companyLogo" src="logo.png" alt="Company logo">
+            <div><h2 id="companyNameOut">AKVIRUS NETWORK PTE LTD</h2><p id="companyInfoOut">Company address · Phone · Email</p></div>
+          </div>
+          <div class="doc-title"><h2 id="docTitle">QUOTATION</h2><p><strong id="docNumberOut">QAK-0001</strong></p></div>
+        </div>
+
+        <div class="meta-grid">
+          <div>
+            <span class="caption">QUOTATION FOR / BILL TO</span>
+            <input id="customerName" placeholder="Customer / company name">
+            <textarea id="customerAddress" rows="2" placeholder="Address"></textarea>
+            <input id="customerContact" placeholder="TEL · M · EMAIL">
+          </div>
+          <div class="fields">
+            <label>No.<input id="docNumber"></label>
+            <label>Date<input id="docDate" type="date"></label>
+            <label>Customer ID<input id="customerId"></label>
+            <label id="validLabel">Valid until<input id="validUntil" type="date"></label>
+            <label>Prepared by<input id="preparedBy"></label>
+          </div>
+        </div>
+
+        <div class="job-meta">
+          <label>Person Incharge<input id="personInCharge"></label>
+          <label>PO Number<input id="poNumber"></label>
+          <label>Project Site<input id="projectSite"></label>
+          <label>Project Date<input id="projectDate" type="date"></label>
+          <label>Completion<input id="completion" value="30 days"></label>
+          <label>Terms<input id="paymentTerms" value="DUE ON RECEIPT"></label>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>#</th><th>PRODUCT</th><th>DESCRIPTION</th><th>QUANTITY</th><th>UNIT PRICE</th><th>AMOUNT</th><th class="no-print"></th></tr></thead>
+            <tbody id="items"></tbody>
+          </table>
+        </div>
+        <button type="button" class="add-row no-print" id="addItem">＋ Add line item</button>
+
+        <div class="below">
+          <div><label class="caption" for="notes">TERMS & CONDITIONS</label><textarea id="notes" rows="7"></textarea></div>
+          <div class="totals">
+            <label>SUBTOTAL <strong id="subtotal">S$ 0.00</strong></label>
+            <label>DISCOUNT <span><input id="discount" type="number" min="0" max="100" value="0"> %</span></label>
+            <label>SST <span><input id="tax" type="number" min="0" value="0"> %</span></label>
+            <label id="depositRow">DOWNPAYMENT <span><input id="deposit" type="number" min="0" step="0.01" value="0"></span></label>
+            <label class="grand">TOTAL <strong id="total">S$ 0.00</strong></label>
+            <label id="balanceRow">BALANCE PAYMENT <strong id="balance">S$ 0.00</strong></label>
+          </div>
+        </div>
+
+        <div class="footer"><p>Thank you for your business.</p><div><span>Authorised signature</span></div></div>
+      </article>
+    </section>
+
+    <section id="records" class="view">
+      <div class="panel">
+        <div class="panel-title">
+          <div><h2>Saved documents</h2><p>Open, duplicate or remove previous documents.</p></div>
+          <input id="search" placeholder="Search customer or document no.">
+        </div>
+        <div id="recordList" class="record-list"></div>
+      </div>
+    </section>
+
+    <section id="settings" class="view">
+      <div class="panel settings">
+        <h2>Company settings</h2>
+        <p>These details appear at the top of every document.</p>
+        <label>Company name<input id="companyName" placeholder="AKVIRUS NETWORK PTE LTD"></label>
+        <label>UEN / Registration no.<input id="companyReg"></label>
+        <label>Address<textarea id="companyAddress" rows="3"></textarea></label>
+        <div class="two"><label>Phone<input id="companyPhone"></label><label>Email<input id="companyEmail" type="email"></label></div>
+        <label>Bank / payment details<textarea id="bankDetails" rows="3"></textarea></label>
+        <label>Default "Prepared by" name<input id="defaultPreparedBy" placeholder="e.g. ALAN KIONG"></label>
+        <hr>
+        <h3>Google Drive (optional)</h3>
+        <p>Enter a Google OAuth Web Client ID to back up saved documents to your own Drive. Saving a document again updates the same Drive file.</p>
+        <label>Google Client ID<input id="googleClientId" placeholder="123456789-xxx.apps.googleusercontent.com"></label>
+        <label class="check"><input id="driveEnabled" type="checkbox"> Save a backup to Google Drive when I save a document</label>
+        <div class="drive-actions"><button type="button" id="connectDrive">Connect Google Drive</button><span id="driveStatus">Not connected</span></div>
+        <button type="button" class="primary" id="saveSettings">Save settings</button>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/calc.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/drive.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
