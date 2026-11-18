@@ -38,7 +38,7 @@
         <button type="button" id="convertCash">Convert to Cash Sales</button>
       </div>
 
-      <article class="paper">
+      <article class="paper" id="documentPaper">
         <div class="doc-head">
           <div class="company">
             <img class="company-logo" id="companyLogo" src="logo.png" alt="Company logo">
@@ -49,13 +49,13 @@
 
         <div class="meta-grid">
           <div>
-            <span class="caption">QUOTATION FOR / BILL TO</span>
+            <span class="caption" id="billToLabel">QUOTATION FOR / BILL TO</span>
             <input id="customerName" placeholder="Customer / company name">
             <textarea id="customerAddress" rows="2" placeholder="Address"></textarea>
             <input id="customerContact" placeholder="TEL · M · EMAIL">
           </div>
           <div class="fields">
-            <label>No.<input id="docNumber"></label>
+            <label><span id="numberLabel">No.</span><input id="docNumber"></label>
             <label>Date<input id="docDate" type="date"></label>
             <label>Customer ID<input id="customerId"></label>
             <label id="validLabel">Valid until<input id="validUntil" type="date"></label>
@@ -64,9 +64,9 @@
         </div>
 
         <div class="job-meta">
-          <label>Person Incharge<input id="personInCharge"></label>
-          <label>PO Number<input id="poNumber"></label>
-          <label>Project Site<input id="projectSite"></label>
+          <label><span id="personLabel">Person Incharge</span><input id="personInCharge"></label>
+          <label><span id="poLabel">PO Number</span><input id="poNumber"></label>
+          <label><span id="projectLabel">Project Site</span><input id="projectSite"></label>
           <label>Project Date<input id="projectDate" type="date"></label>
           <label>Completion<input id="completion" value="30 days"></label>
           <label>Terms<input id="paymentTerms" value="DUE ON RECEIPT"></label>
@@ -74,14 +74,14 @@
 
         <div class="table-wrap">
           <table>
-            <thead><tr><th>#</th><th>PRODUCT</th><th>DESCRIPTION</th><th>QUANTITY</th><th>UNIT PRICE</th><th>AMOUNT</th><th class="no-print"></th></tr></thead>
+            <thead><tr><th>#</th><th id="productHeading">PRODUCT</th><th id="descriptionHeading">DESCRIPTION</th><th>QUANTITY</th><th>UNIT PRICE</th><th>AMOUNT</th><th class="no-print"></th></tr></thead>
             <tbody id="items"></tbody>
           </table>
         </div>
         <button type="button" class="add-row no-print" id="addItem">＋ Add line item</button>
 
         <div class="below">
-          <div><label class="caption" for="notes">TERMS & CONDITIONS</label><textarea id="notes" rows="7"></textarea></div>
+          <div class="notes-block"><label class="caption" id="notesLabel" for="notes">TERMS & CONDITIONS</label><textarea id="notes" rows="7"></textarea></div>
           <div class="totals">
             <label>SUBTOTAL <strong id="subtotal">S$ 0.00</strong></label>
             <label>DISCOUNT <span><input id="discount" type="number" min="0" max="100" value="0"> %</span></label>
@@ -92,7 +92,12 @@
           </div>
         </div>
 
-        <div class="footer"><p>Thank you for your business.</p><div><span>Authorised signature</span></div></div>
+        <div class="invoice-payment">
+          <p>Make all checks payable to <strong id="companyPayeeOut">AKVIRUS NETWORK PTE LTD</strong></p>
+          <p id="companyPaymentOut">UEN and bank details appear here.</p>
+          <p>If you have any questions concerning this invoice, please contact us using the details above.</p>
+        </div>
+        <div class="footer"><p id="footerMessage">Thank you for your business.</p><div><span id="signatureLabel">Authorised signature</span></div></div>
       </article>
     </section>
 

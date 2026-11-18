@@ -155,9 +155,23 @@
 
   function syncHeader() {
     const type = $('#docType').value;
+    const invoice = type === 'Invoice';
     $('#docTitle').textContent = type.toUpperCase();
     $('#docNumberOut').textContent = $('#docNumber').value;
     $('#pageTitle').textContent = (state.currentId ? 'Edit ' : 'New ') + type;
+    $('#documentPaper').classList.toggle('invoice-format', invoice);
+    $('#billToLabel').textContent = invoice ? 'CUSTOMER DETAILS' : `${type.toUpperCase()} FOR / BILL TO`;
+    $('#numberLabel').textContent = invoice ? 'Invoice #' : 'No.';
+    $('#personLabel').textContent = invoice ? 'Name' : 'Person Incharge';
+    $('#poLabel').textContent = invoice ? 'Cust PO' : 'PO Number';
+    $('#projectLabel').textContent = invoice ? 'Project' : 'Project Site';
+    $('#productHeading').textContent = invoice ? 'ITEM' : 'PRODUCT';
+    $('#descriptionHeading').textContent = 'DESCRIPTION';
+    $('#notesLabel').textContent = invoice ? 'INVOICE NOTES' : 'TERMS & CONDITIONS';
+    $('#footerMessage').textContent = invoice
+      ? 'Thank you for the opportunity to provide you our services.'
+      : 'Thank you for your business.';
+    $('#signatureLabel').textContent = invoice ? 'Confirmation Signature and Date' : 'Authorised signature';
     $('#validLabel').style.display = type === 'Quotation' ? 'grid' : 'none';
     const showPayment = type !== 'Quotation';
     $('#depositRow').style.display = showPayment ? 'flex' : 'none';
@@ -226,7 +240,9 @@
   /* ---------- company settings ---------- */
   function applySettings() {
     const s = Store.getSettings();
-    $('#companyNameOut').textContent = s.companyName || 'AKVIRUS NETWORK PTE LTD';
+    const companyName = s.companyName || 'AKVIRUS NETWORK PTE LTD';
+    $('#companyNameOut').textContent = companyName;
+    $('#companyPayeeOut').textContent = companyName;
     $('#companyInfoOut').textContent =
       [
         s.companyReg && `UEN: ${s.companyReg}`,
@@ -235,6 +251,10 @@
         s.companyEmail,
         s.bankDetails && `Payment: ${s.bankDetails}`
       ].filter(Boolean).join(' · ') || 'Company address · Phone · Email';
+    $('#companyPaymentOut').textContent = [
+      s.companyReg && `UEN: ${s.companyReg}`,
+      s.bankDetails
+    ].filter(Boolean).join('\n') || 'Add UEN and bank details in Company settings.';
   }
 
   function loadSettings() {

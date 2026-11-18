@@ -135,3 +135,13 @@ test('app.js keeps its core features', () => {
   for (const t of ["convert('Invoice')", "convert('Cash Sales')", 'Drive.backup', 'window.print()'])
     assert.ok(js.includes(t), `missing: ${t}`);
 });
+
+test('invoice format is activated without changing other document types', () => {
+  const html = fs.readFileSync(dist('index.html'), 'utf8');
+  const js = fs.readFileSync(dist('js/app.js'), 'utf8');
+  const css = fs.readFileSync(dist('style.css'), 'utf8');
+  assert.ok(html.includes('id="documentPaper"'));
+  assert.ok(js.includes("classList.toggle('invoice-format', invoice)"));
+  assert.ok(css.includes('.paper.invoice-format'));
+  assert.ok(css.includes('.invoice-format .invoice-payment'));
+});
