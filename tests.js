@@ -145,6 +145,12 @@ test('app.js keeps its core features', () => {
     assert.ok(js.includes(t), `missing: ${t}`);
 });
 
+test('blank item rows keep their normal height', () => {
+  const js = fs.readFileSync(dist('js/app.js'), 'utf8');
+  assert.ok(js.includes("if (!t.value.trim())"));
+  assert.ok(js.includes("t.style.height = ''"));
+});
+
 test('invoice format is activated without changing other document types', () => {
   const html = fs.readFileSync(dist('index.html'), 'utf8');
   const js = fs.readFileSync(dist('js/app.js'), 'utf8');

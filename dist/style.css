@@ -78,7 +78,7 @@ th:nth-child(6) { width: 34px; border-color: transparent; background: transparen
 td:nth-child(6) { border-color: transparent; }
 td input, td textarea { width: 100%; border: 0; padding: 7px 3px; }
 td textarea { resize: none; overflow: hidden; }
-.reference-format td textarea { field-sizing: content; min-height: 45px; }
+.reference-format td textarea { min-height: 45px; }
 td:nth-child(4) input, td:nth-child(5) { text-align: right; }
 .remove { color: var(--danger); border: 0; padding: 4px 7px; }
 .add-row { margin-top: 10px; border-style: dashed; color: var(--blue); }

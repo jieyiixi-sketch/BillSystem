@@ -37,6 +37,10 @@
   };
 
   const fit = (t) => {
+    if (!t.value.trim()) {
+      t.style.height = '';
+      return;
+    }
     t.style.height = 'auto';
     if (t.scrollHeight) t.style.height = t.scrollHeight + 'px'; // 0 when the view is hidden
   };
