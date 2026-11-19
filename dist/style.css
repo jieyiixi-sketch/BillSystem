@@ -33,26 +33,30 @@ main { width: calc(100% - 245px); margin-left: 245px; }
 .topbar h1 { font-size: 21px; margin: 0; }
 .topbar p { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
 .actions { display: flex; gap: 9px; }
-.view { display: none; padding: 26px; }
+.view { display: none; padding: 26px; overflow-x: auto; }
 .view.active { display: block; }
 .convert { max-width: 960px; margin: 0 auto 15px; display: flex; align-items: end; gap: 9px; }
 .convert label { margin-right: auto; }
 .convert select { display: block; margin-top: 4px; min-width: 170px; }
 
 /* ---------- paper ---------- */
-.paper { background: #fff; max-width: 960px; min-height: 1100px; margin: auto; padding: 52px 55px; box-shadow: 0 4px 25px #20364b17; }
+.paper { background: #fff; width: 960px; max-width: 960px; min-height: 1100px; margin: auto; padding: 52px 55px; box-shadow: 0 4px 25px #20364b17; }
 .doc-head { display: flex; justify-content: space-between; border-bottom: 3px solid var(--navy); padding-bottom: 28px; }
 .company { display: flex; align-items: center; gap: 15px; }
 .company-logo { width: 205px; height: auto; max-height: 72px; object-fit: contain; object-position: left center; }
 .company h2 { font-size: 19px; margin: 0 0 6px; color: var(--navy); }
 .company p { margin: 0; max-width: 460px; white-space: pre-line; font-size: 12px; color: var(--muted); }
+.company-mark { display: none; }
 .doc-title { text-align: right; }
 .doc-title h2 { font-size: 28px; letter-spacing: .12em; margin: 3px 0 8px; color: var(--blue); }
 .doc-title p { margin: 0; }
 
-.meta-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 60px; margin: 32px 0; }
+.meta-grid { display: grid; grid-template-columns: 1.35fr .65fr; gap: 35px; margin: 32px 0; }
 .caption { display: block; color: var(--blue); font-size: 11px; font-weight: 800; letter-spacing: .1em; margin-bottom: 8px; }
 .meta-grid input, .meta-grid textarea { width: 100%; border: 0; border-bottom: 1px dashed var(--line); padding: 7px 2px; resize: none; }
+.customer-line { display: grid; grid-template-columns: 85px 1fr; align-items: center; font-size: 12px; }
+.customer-line > span { color: var(--muted); }
+.customer-line input { font-size: 11px; }
 .fields label { display: grid; grid-template-columns: 90px 1fr; align-items: center; font-size: 12px; color: var(--muted); }
 .fields input { text-align: right; color: var(--ink); }
 
@@ -63,7 +67,7 @@ main { width: calc(100% - 245px); margin-left: 245px; }
 
 /* ---------- items table ---------- */
 .table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; border: 1px solid #222; }
+table { width: 100%; border-collapse: collapse; border: 1px solid #222; table-layout: fixed; }
 th { background: #e8edf1; color: #111; border: 1px solid #222; text-align: left; font-size: 11px; letter-spacing: .04em; padding: 10px 8px; }
 td { border: 1px solid #222; vertical-align: top; padding: 5px; }
 th:nth-child(1) { width: 28px; }
@@ -75,6 +79,7 @@ th:nth-child(7) { width: 34px; border-color: transparent; background: transparen
 td:nth-child(7) { border-color: transparent; }
 td input, td textarea { width: 100%; border: 0; padding: 7px 3px; }
 td textarea { resize: none; overflow: hidden; }
+.reference-format td textarea { field-sizing: content; min-height: 45px; }
 td:nth-child(1) { text-align: center; color: var(--muted); }
 td:nth-child(5) input, td:nth-child(6) { text-align: right; }
 .remove { color: var(--danger); border: 0; padding: 4px 7px; }
@@ -89,52 +94,63 @@ td:nth-child(5) input, td:nth-child(6) { text-align: right; }
 .footer { margin-top: 70px; display: flex; justify-content: space-between; align-items: end; font-size: 12px; color: var(--muted); }
 .footer div { width: 200px; border-top: 1px solid var(--ink); padding-top: 7px; text-align: center; }
 .invoice-payment { display: none; }
+.amount-words { display: none; margin: 18px 0 0; font-weight: 800; font-style: italic; text-decoration: underline; }
+.quotation-contact { margin-top: 7px; font-size: 12px; line-height: 1.65; font-style: italic; }
 
-/* ---------- invoice layout: follows the supplied YTC invoice ---------- */
-.paper.invoice-format { color: #142f43; }
-.invoice-format .doc-head {
-  position: relative; min-height: 112px; padding: 20px 18px; overflow: hidden;
+/* ---------- supplied AKVIRUS invoice and quotation layout ---------- */
+.paper.reference-format { color: #142f43; font-family: "Aptos Narrow", "Arial Narrow", Arial, sans-serif; font-size: 13.333px; }
+.reference-format .doc-head {
+  position: relative; min-height: 92px; padding: 16px 18px; overflow: hidden;
   border: 0; background: #123c57;
 }
-.invoice-format .company-logo {
+.reference-format .company-logo {
   position: absolute; inset: 0; width: 100%; height: 100%; max-height: none;
   object-fit: cover; opacity: .82;
 }
-.invoice-format .company { position: static; align-items: flex-start; }
-.invoice-format .company > div { position: relative; z-index: 2; color: #fff; text-shadow: 0 1px 2px #001b2d; }
-.invoice-format .company h2 { color: #fff; font-size: 27px; letter-spacing: .02em; }
-.invoice-format .company p { color: #fff; max-width: 650px; font-size: 12px; }
-.invoice-format .doc-title {
-  position: absolute; z-index: 1; right: 18px; bottom: 14px; color: #fff;
+.reference-format .company { position: static; align-items: flex-start; }
+.reference-format .company > div { position: relative; z-index: 2; color: #fff; }
+.reference-format .company h2 { color: #fff; font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-weight: 700; letter-spacing: 0; margin: 0 0 16px; }
+.reference-format .company p { color: #fff; max-width: 720px; font-family: Arial, Helvetica, sans-serif; font-size: 10px; line-height: 1.2; }
+.reference-format .company-mark { display: block; position: absolute; z-index: 2; top: 20px; right: 28px; color: #44b8df; font: 10px/0.8 Arial, Helvetica, sans-serif; text-align: left; }
+.reference-format .doc-title {
+  position: static; color: #142f43; text-align: right; margin: 8px 3px -7px;
 }
+.reference-format .doc-title h2 { color: #173a50; font-family: Constantia, Georgia, "Times New Roman", serif; font-size: 16px; font-weight: 400; letter-spacing: 0; margin: 0 0 2px; font-style: italic; }
+.reference-format .doc-title p { font-size: 12px; }
+.invoice-format .doc-title { text-align: left; margin: 8px 3px -7px; }
 .invoice-format .doc-title h2 { display: none; }
-.invoice-format .doc-title p { font-size: 12px; }
-.invoice-format .doc-title p::before { content: 'Invoice # '; font-size: 20px; font-weight: 400; }
-.invoice-format .doc-title strong { font-size: 20px; }
-.invoice-format .meta-grid { margin: 18px 0 12px; gap: 35px; }
-.invoice-format .caption { color: #142f43; }
-.invoice-format .meta-grid input,
-.invoice-format .meta-grid textarea { border-bottom-color: #b7c4cc; }
-.invoice-format .job-meta { border-color: #31546a; }
-.invoice-format .job-meta label { border-color: #31546a; }
-.invoice-format table { border-color: #42aee4; }
-.invoice-format th {
+.invoice-format .doc-title p::before { content: 'Invoice # '; font-family: Constantia, Georgia, serif; font-size: 16px; font-weight: 400; }
+.invoice-format .doc-title strong { font-family: Constantia, Georgia, serif; font-size: 16px; font-weight: 400; }
+.reference-format .meta-grid { margin: 18px 0 12px; gap: 35px; }
+.reference-format .caption { color: #142f43; }
+.reference-format .meta-grid input,
+.reference-format .meta-grid textarea { border-bottom-color: #b7c4cc; }
+.reference-format .job-meta { border-color: #31546a; }
+.reference-format .job-meta label { border-color: #31546a; text-align: center; }
+.reference-format table { border-color: #42aee4; }
+.reference-format th {
   background: #f2f2f2; border-color: #42aee4; color: #111;
   text-align: center; font-size: 12px;
 }
-.invoice-format td { border-color: #42aee4; }
-.invoice-format .below { margin-top: 18px; }
-.invoice-format .notes-block { font-size: 12px; font-style: italic; }
-.invoice-format .totals label { border-color: #42aee4; }
-.invoice-format .totals .grand { color: #111; border: 1px solid #42aee4; padding: 9px 5px; }
+.reference-format td { border-color: #42aee4; }
+.reference-format .below { margin-top: 18px; align-items: start; }
+.reference-format .notes-block { font-family: "Aptos Narrow", "Arial Narrow", Arial, sans-serif; font-size: 12px; }
+.reference-format .totals label { border: 1px solid #42aee4; border-bottom: 0; padding: 7px 5px; font-family: "Aptos Display", "Aptos Narrow", "Arial Narrow", Arial, sans-serif; }
+.reference-format .totals label:last-child { border-bottom: 1px solid #42aee4; }
+.reference-format .totals .grand { color: #111; font-size: 14px; border-bottom: 1px solid #42aee4; }
+.reference-format .footer { color: #142f43; font-family: "Aptos Narrow", "Arial Narrow", Arial, sans-serif; font-style: italic; margin-top: 42px; }
+.reference-format .footer > p { flex: 1; text-align: center; font-family: "Bradley Hand ITC", "Bradley Hand", cursive; font-size: 12px; color: #1d4c68; }
+.reference-format .footer div { width: 235px; }
+.reference-format .footer div span { font-family: "Aptos Narrow", "Arial Narrow", Arial, sans-serif; font-size: 10.667px; }
 .invoice-format .invoice-payment {
   display: block; width: 58%; margin-top: 18px; font-size: 12px;
-  font-style: italic; white-space: pre-line;
+  font-family: "Aptos Narrow", "Arial Narrow", Arial, sans-serif; font-style: italic; white-space: pre-line;
 }
+.invoice-format .notes-block > label,
+.invoice-format .notes-block > textarea,
+.invoice-format .quotation-contact { display: none !important; }
+.invoice-format .amount-words { margin-top: 6px; }
 .invoice-format .invoice-payment p { margin: 5px 0; }
-.invoice-format .footer { color: #142f43; font-style: italic; margin-top: 42px; }
-.invoice-format .footer > p { flex: 1; text-align: center; }
-.invoice-format .footer div { width: 235px; }
 
 /* ---------- panels: records & settings ---------- */
 .panel { background: #fff; max-width: 1050px; margin: auto; border: 1px solid var(--line); border-radius: 10px; padding: 28px; }
@@ -167,7 +183,7 @@ td:nth-child(5) input, td:nth-child(6) { text-align: right; }
 #toast.show { opacity: 1; transform: none; }
 
 /* ---------- small screens ---------- */
-@media (max-width: 800px) {
+@media screen and (max-width: 800px) {
   .sidebar { width: 72px; padding: 20px 10px; }
   .brand div, .sidebar nav button, .sidebar .primary { font-size: 0; }
   .sidebar .primary::first-letter { font-size: 18px; }
@@ -176,7 +192,7 @@ td:nth-child(5) input, td:nth-child(6) { text-align: right; }
   .topbar { height: auto; padding: 15px; align-items: start; }
   .actions { flex-wrap: wrap; justify-content: end; }
   .view { padding: 12px; }
-  .paper { padding: 28px 22px; min-height: 0; }
+  .paper { width: 820px; min-width: 820px; padding: 28px 22px; min-height: 0; }
   .company p { display: none; }
   .company-logo { width: 150px; }
   .meta-grid, .below { grid-template-columns: 1fr; gap: 25px; }
@@ -195,12 +211,12 @@ td:nth-child(5) input, td:nth-child(6) { text-align: right; }
   main { width: 100%; margin: 0; }
   .view { display: none !important; padding: 0; }
   #editor.view { display: block !important; }
-  .paper { box-shadow: none; max-width: none; min-height: 0; padding: 0; }
+  .paper { box-shadow: none; width: auto; max-width: none; min-height: 0; padding: 0; }
   .paper input, .paper textarea { border: 0; resize: none; }
   .paper input::-webkit-inner-spin-button, .paper input::-webkit-outer-spin-button { display: none; }
   .doc-head { padding-bottom: 18px; }
   .company-logo { width: 185px; }
-  .invoice-format .company-logo { width: 100%; }
+  .reference-format .company-logo { width: 100%; }
   .meta-grid { margin: 22px 0; }
   .job-meta input { padding: 2px 0; }
   .below { margin-top: 24px; }

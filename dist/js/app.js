@@ -2,14 +2,14 @@
 (() => {
   'use strict';
 
-  const { r2, money, today, plusDays, nextNumber, defaultNotes, convertNotes, uuid } = Calc;
+  const { r2, money, amountInWords, today, plusDays, nextNumber, defaultNotes, convertNotes, uuid } = Calc;
   const $ = (s) => document.querySelector(s);
   const $$ = (s) => [...document.querySelectorAll(s)];
 
   const FIELDS = [
     'customerName', 'customerAddress', 'customerContact', 'customerId', 'preparedBy',
     'personInCharge', 'poNumber', 'projectSite', 'projectDate', 'completion',
-    'paymentTerms', 'docNumber', 'docDate', 'validUntil', 'notes'
+    'paymentTerms', 'docNumber', 'docDate', 'quotationRef', 'validUntil', 'notes'
   ];
   const SETTING_FIELDS = [
     'companyName', 'companyReg', 'companyAddress', 'companyPhone', 'companyEmail',
@@ -40,7 +40,7 @@
     t.style.height = 'auto';
     if (t.scrollHeight) t.style.height = t.scrollHeight + 'px'; // 0 when the view is hidden
   };
-  const fitAll = () => $$('#items .desc').forEach(fit);
+  const fitAll = () => $$('#items .product, #items .desc').forEach(fit);
 
   const markDirty = () => { state.dirty = true; };
   const confirmDiscard = () => !state.dirty || confirm('You have unsaved changes. Discard them?');
@@ -51,16 +51,16 @@
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td></td>
-      <td><input class="product" placeholder="e.g. Cat6 cabling" value="${esc(product)}"></td>
-      <td><textarea class="desc" rows="2" placeholder="Work description">${esc(description)}</textarea></td>
+      <td><textarea class="product" rows="2" placeholder="e.g. Cat6 cabling">${esc(product)}</textarea></td>
+      <td><textarea class="desc" rows="4" placeholder="Work description">${esc(description)}</textarea></td>
       <td><input class="qty" type="number" min="0" step="0.01" value="${esc(qty)}"></td>
       <td><input class="price" type="number" min="0" step="0.01" value="${esc(price)}"></td>
       <td class="amount"></td>
       <td class="no-print"><button type="button" class="remove" aria-label="Remove row">×</button></td>`;
     $('#items').append(tr);
 
-    const desc = tr.querySelector('.desc');
-    desc.addEventListener('input', () => fit(desc));
+    const textareas = tr.querySelectorAll('textarea');
+    textareas.forEach((textarea) => textarea.addEventListener('input', () => fit(textarea)));
     tr.querySelectorAll('input,textarea').forEach((i) => i.addEventListener('input', calculate));
     tr.querySelector('.remove').onclick = () => {
       tr.remove();
@@ -68,7 +68,7 @@
       calculate();
       markDirty();
     };
-    fit(desc);
+    textareas.forEach(fit);
     renumber();
     calculate();
   }
@@ -81,12 +81,15 @@
       items: rows.map((r) => ({ qty: r.querySelector('.qty').value, price: r.querySelector('.price').value })),
       discount: $('#discount').value,
       tax: $('#tax').value,
+      other: $('#other').value,
       deposit: $('#deposit').value
     });
     rows.forEach((r, i) => (r.querySelector('.amount').textContent = t.lines[i].toFixed(2)));
     $('#subtotal').textContent = money(t.subtotal);
+    $('#grandTotal').textContent = money(t.total);
     $('#total').textContent = money(t.total);
     $('#balance').textContent = money(t.balance);
+    $('#amountWords').textContent = amountInWords(t.total);
     return t.total;
   }
 
@@ -98,6 +101,7 @@
       type: $('#docType').value,
       discount: Number($('#discount').value) || 0,
       tax: Number($('#tax').value) || 0,
+      other: Number($('#other').value) || 0,
       deposit: Number($('#deposit').value) || 0,
       total: calculate(),
       updatedAt: new Date().toISOString(),
@@ -122,6 +126,7 @@
     FIELDS.forEach((k) => ($('#' + k).value = d[k] ?? ''));
     $('#discount').value = d.discount || 0;
     $('#tax').value = d.tax || 0;
+    $('#other').value = d.other || 0;
     $('#deposit').value = d.deposit || 0;
 
     $('#items').innerHTML = '';
@@ -156,12 +161,14 @@
   function syncHeader() {
     const type = $('#docType').value;
     const invoice = type === 'Invoice';
+    const referenceFormat = type !== 'Cash Sales';
     $('#docTitle').textContent = type.toUpperCase();
     $('#docNumberOut').textContent = $('#docNumber').value;
     $('#pageTitle').textContent = (state.currentId ? 'Edit ' : 'New ') + type;
     $('#documentPaper').classList.toggle('invoice-format', invoice);
+    $('#documentPaper').classList.toggle('reference-format', referenceFormat);
     $('#billToLabel').textContent = invoice ? 'CUSTOMER DETAILS' : `${type.toUpperCase()} FOR / BILL TO`;
-    $('#numberLabel').textContent = invoice ? 'Invoice #' : 'No.';
+    $('#numberLabel').textContent = invoice ? 'Invoice #' : 'Quotation #';
     $('#personLabel').textContent = invoice ? 'Name' : 'Person Incharge';
     $('#poLabel').textContent = invoice ? 'Cust PO' : 'PO Number';
     $('#projectLabel').textContent = invoice ? 'Project' : 'Project Site';
@@ -170,9 +177,18 @@
     $('#notesLabel').textContent = invoice ? 'INVOICE NOTES' : 'TERMS & CONDITIONS';
     $('#footerMessage').textContent = invoice
       ? 'Thank you for the opportunity to provide you our services.'
-      : 'Thank you for your business.';
-    $('#signatureLabel').textContent = invoice ? 'Confirmation Signature and Date' : 'Authorised signature';
+      : type === 'Quotation' ? '' : 'Thank you for your business.';
+    $('#signatureLabel').textContent = referenceFormat ? 'Confirmation Signature and Date' : 'Authorised signature';
+    $('#quotationContact').style.display = type === 'Quotation' ? 'block' : 'none';
+    $('#quotationContactName').textContent = $('#preparedBy').value || 'Prepared by';
     $('#validLabel').style.display = type === 'Quotation' ? 'grid' : 'none';
+    $('#referenceLabel').style.display = invoice ? 'grid' : 'none';
+    $('#amountWords').style.display = invoice ? 'block' : 'none';
+    $('#invoicePayment').style.display = invoice ? 'block' : 'none';
+    $('#discountRow').style.display = referenceFormat ? 'none' : 'flex';
+    $('#taxRow').style.display = referenceFormat ? 'none' : 'flex';
+    $('#grandTotalRow').style.display = referenceFormat ? 'flex' : 'none';
+    $('#othersRow').style.display = type === 'Quotation' ? 'flex' : 'none';
     const showPayment = type !== 'Quotation';
     $('#depositRow').style.display = showPayment ? 'flex' : 'none';
     $('#balanceRow').style.display = showPayment ? 'flex' : 'none';
@@ -241,20 +257,16 @@
   function applySettings() {
     const s = Store.getSettings();
     const companyName = s.companyName || 'AKVIRUS NETWORK PTE LTD';
+    const companyAddress = s.companyAddress || '302 Sims Avenue, #01-11, SMART SUITES Singapore 387516';
+    const companyPhone = s.companyPhone || '6683 6666';
+    const companyEmail = s.companyEmail || 'ak_ops@akvirus.com';
     $('#companyNameOut').textContent = companyName;
     $('#companyPayeeOut').textContent = companyName;
-    $('#companyInfoOut').textContent =
-      [
-        s.companyReg && `UEN: ${s.companyReg}`,
-        s.companyAddress,
-        s.companyPhone,
-        s.companyEmail,
-        s.bankDetails && `Payment: ${s.bankDetails}`
-      ].filter(Boolean).join(' · ') || 'Company address · Phone · Email';
+    $('#companyInfoOut').textContent = `${companyAddress} Tel: ${companyPhone} | Email: ${companyEmail}`;
     $('#companyPaymentOut').textContent = [
-      s.companyReg && `UEN: ${s.companyReg}`,
-      s.bankDetails
-    ].filter(Boolean).join('\n') || 'Add UEN and bank details in Company settings.';
+      `UEN: ${s.companyReg || '202023329C'}`,
+      s.bankDetails || 'Bank: MayBank Singapore Limited\nAccount No.: 04011560903'
+    ].join('\n');
   }
 
   function loadSettings() {
@@ -352,8 +364,9 @@
   /* ---------- events ---------- */
   function bind() {
     $('#addItem').onclick = () => { addRow(); markDirty(); };
-    ['discount', 'tax', 'deposit'].forEach((id) => ($('#' + id).oninput = calculate));
+    ['discount', 'tax', 'other', 'deposit'].forEach((id) => ($('#' + id).oninput = calculate));
     $('#docNumber').addEventListener('input', syncHeader);
+    $('#preparedBy').addEventListener('input', syncHeader);
 
     $('#docType').onchange = () => {
       const type = $('#docType').value;

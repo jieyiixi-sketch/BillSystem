@@ -40,20 +40,42 @@
   const money = (n) =>
     'S$ ' + num(n).toLocaleString('en-SG', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
+  function amountInWords(value) {
+    const n = Math.floor(Math.max(0, num(value)));
+    if (!n) return 'SINGAPORE DOLLAR ZERO ONLY';
+    const ones = ['','ONE','TWO','THREE','FOUR','FIVE','SIX','SEVEN','EIGHT','NINE','TEN','ELEVEN','TWELVE','THIRTEEN','FOURTEEN','FIFTEEN','SIXTEEN','SEVENTEEN','EIGHTEEN','NINETEEN'];
+    const tens = ['','','TWENTY','THIRTY','FORTY','FIFTY','SIXTY','SEVENTY','EIGHTY','NINETY'];
+    const underThousand = (v) => [
+      v >= 100 ? `${ones[Math.floor(v / 100)]} HUNDRED` : '',
+      v % 100 < 20 ? ones[v % 100] : `${tens[Math.floor((v % 100) / 10)]}${v % 10 ? `-${ones[v % 10]}` : ''}`
+    ].filter(Boolean).join(' ');
+    const groups = [[1e9, 'BILLION'], [1e6, 'MILLION'], [1e3, 'THOUSAND']];
+    let rest = n;
+    const words = [];
+    groups.forEach(([size, name]) => {
+      if (rest >= size) {
+        words.push(`${underThousand(Math.floor(rest / size))} ${name}`);
+        rest %= size;
+      }
+    });
+    if (rest) words.push(underThousand(rest));
+    return `SINGAPORE DOLLAR ${words.join(' ')} ONLY`;
+  }
+
   const lineAmount = (qty, price) => r2(num(qty) * num(price));
 
   /**
    * items: [{qty, price}], discount % (0-100), tax % (>=0), deposit (amount)
    * Every line is rounded first, so the lines always add up to the subtotal.
    */
-  function totals({ items = [], discount = 0, tax = 0, deposit = 0 } = {}) {
+  function totals({ items = [], discount = 0, tax = 0, other = 0, deposit = 0 } = {}) {
     const lines = items.map((i) => lineAmount(i.qty, i.price));
     const subtotal = r2(lines.reduce((a, b) => a + b, 0));
     const discountPct = clamp(num(discount), 0, 100);
     const taxPct = Math.max(0, num(tax));
     const net = r2(subtotal * (1 - discountPct / 100));
     const taxAmount = r2(net * (taxPct / 100));
-    const total = r2(net + taxAmount);
+    const total = r2(net + taxAmount + num(other));
     const balance = Math.max(0, r2(total - Math.max(0, num(deposit))));
     return { lines, subtotal, discountAmount: r2(subtotal - net), net, taxAmount, total, balance };
   }
@@ -101,5 +123,5 @@
     return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
   }
 
-  return { PREFIX, r2, money, lineAmount, totals, ymd, today, plusDays, nextNumber, defaultNotes, convertNotes, uuid };
+  return { PREFIX, r2, money, amountInWords, lineAmount, totals, ymd, today, plusDays, nextNumber, defaultNotes, convertNotes, uuid };
 });

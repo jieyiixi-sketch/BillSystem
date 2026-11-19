@@ -38,6 +38,10 @@ test('balance = total - deposit and never negative', () => {
   assert.equal(Calc.totals({ items, deposit: 5000 }).balance, 0);
 });
 
+test('other charges are included in the total', () => {
+  assert.equal(Calc.totals({ items: [{ qty: 1, price: 100 }], other: 25 }).total, 125);
+});
+
 test('bad input is treated as zero; discount is clamped to 0-100', () => {
   const t = Calc.totals({ items: [{ qty: 'abc', price: '' }, { qty: 2, price: 50 }], discount: 150 });
   assert.equal(t.subtotal, 100);
@@ -47,6 +51,11 @@ test('bad input is treated as zero; discount is clamped to 0-100', () => {
 test('money formats as S$ with 2 decimals', () => {
   assert.match(Calc.money(1234.5), /^S\$ 1,234\.50$/);
   assert.match(Calc.money(undefined), /^S\$ 0\.00$/);
+});
+
+test('amount in words matches the invoice wording', () => {
+  assert.equal(Calc.amountInWords(3065), 'SINGAPORE DOLLAR THREE THOUSAND SIXTY-FIVE ONLY');
+  assert.equal(Calc.amountInWords(1840), 'SINGAPORE DOLLAR ONE THOUSAND EIGHT HUNDRED FORTY ONLY');
 });
 
 /* ---------- dates ---------- */
@@ -142,6 +151,15 @@ test('invoice format is activated without changing other document types', () => 
   const css = fs.readFileSync(dist('style.css'), 'utf8');
   assert.ok(html.includes('id="documentPaper"'));
   assert.ok(js.includes("classList.toggle('invoice-format', invoice)"));
-  assert.ok(css.includes('.paper.invoice-format'));
+  assert.ok(js.includes("classList.toggle('reference-format', referenceFormat)"));
+  assert.ok(css.includes('.paper.reference-format'));
   assert.ok(css.includes('.invoice-format .invoice-payment'));
+  assert.ok(html.includes('id="quotationRef"'));
+  assert.ok(html.includes('Complexity<br>Solutions'));
+  assert.ok(js.includes('302 Sims Avenue, #01-11, SMART SUITES Singapore 387516'));
+  assert.ok(js.includes('ak_ops@akvirus.com'));
+  assert.ok(js.includes('MayBank Singapore Limited'));
+  assert.ok(js.includes('04011560903'));
+  assert.ok(css.includes('"Aptos Narrow"'));
+  assert.ok(css.includes('"Bradley Hand ITC"'));
 });

@@ -43,21 +43,23 @@
           <div class="company">
             <img class="company-logo" id="companyLogo" src="logo.png" alt="Company logo">
             <div><h2 id="companyNameOut">AKVIRUS NETWORK PTE LTD</h2><p id="companyInfoOut">Company address · Phone · Email</p></div>
+            <span class="company-mark">Complexity<br>Solutions</span>
           </div>
-          <div class="doc-title"><h2 id="docTitle">QUOTATION</h2><p><strong id="docNumberOut">QAK-0001</strong></p></div>
         </div>
+        <div class="doc-title"><h2 id="docTitle">QUOTATION</h2><p><strong id="docNumberOut">QAK-0001</strong></p></div>
 
         <div class="meta-grid">
           <div>
             <span class="caption" id="billToLabel">QUOTATION FOR / BILL TO</span>
-            <input id="customerName" placeholder="Customer / company name">
-            <textarea id="customerAddress" rows="2" placeholder="Address"></textarea>
-            <input id="customerContact" placeholder="TEL · M · EMAIL">
+            <label class="customer-line"><span>Company</span><input id="customerName" placeholder="Customer / company name"></label>
+            <label class="customer-line"><span>Address</span><textarea id="customerAddress" rows="2" placeholder="Address"></textarea></label>
+            <label class="customer-line"><span>TEL · FAX · M · EMAIL</span><input id="customerContact" placeholder="TEL · FAX · M · EMAIL"></label>
           </div>
           <div class="fields">
             <label><span id="numberLabel">No.</span><input id="docNumber"></label>
             <label>Date<input id="docDate" type="date"></label>
             <label>Customer ID<input id="customerId"></label>
+            <label id="referenceLabel">QR<input id="quotationRef"></label>
             <label id="validLabel">Valid until<input id="validUntil" type="date"></label>
             <label>Prepared by<input id="preparedBy"></label>
           </div>
@@ -81,21 +83,29 @@
         <button type="button" class="add-row no-print" id="addItem">＋ Add line item</button>
 
         <div class="below">
-          <div class="notes-block"><label class="caption" id="notesLabel" for="notes">TERMS & CONDITIONS</label><textarea id="notes" rows="7"></textarea></div>
+          <div class="notes-block">
+            <p class="amount-words" id="amountWords"></p>
+            <label class="caption" id="notesLabel" for="notes">TERMS & CONDITIONS</label>
+            <textarea id="notes" rows="7"></textarea>
+            <div class="quotation-contact" id="quotationContact">Please contact me if you need any clarification<br><strong id="quotationContactName"></strong><br>Ops Mgr</div>
+          </div>
           <div class="totals">
             <label>SUBTOTAL <strong id="subtotal">S$ 0.00</strong></label>
-            <label>DISCOUNT <span><input id="discount" type="number" min="0" max="100" value="0"> %</span></label>
-            <label>SST <span><input id="tax" type="number" min="0" value="0"> %</span></label>
-            <label id="depositRow">DOWNPAYMENT <span><input id="deposit" type="number" min="0" step="0.01" value="0"></span></label>
+            <label id="discountRow">DISCOUNT <span><input id="discount" type="number" min="0" max="100" value="0"> %</span></label>
+            <label id="taxRow">SST <span><input id="tax" type="number" min="0" value="0"> %</span></label>
+            <label id="grandTotalRow">GRAND TOTAL <strong id="grandTotal">S$ 0.00</strong></label>
+            <label id="othersRow">OTHERS <span><input id="other" type="number" step="0.01" value="0"></span></label>
+            <label id="depositRow">50% DOWNPAYMENT <span><input id="deposit" type="number" min="0" step="0.01" value="0"></span></label>
             <label class="grand">TOTAL <strong id="total">S$ 0.00</strong></label>
             <label id="balanceRow">BALANCE PAYMENT <strong id="balance">S$ 0.00</strong></label>
           </div>
         </div>
 
-        <div class="invoice-payment">
+        <div class="invoice-payment" id="invoicePayment">
           <p>Make all checks payable to <strong id="companyPayeeOut">AKVIRUS NETWORK PTE LTD</strong></p>
           <p id="companyPaymentOut">UEN and bank details appear here.</p>
-          <p>If you have any questions concerning this invoice, please contact us using the details above.</p>
+          <p>If you have any questions concerning this invoice, use the following contact information:</p>
+          <p>Alan Kiong 91778889<br>ak_ops@akvirus.com</p>
         </div>
         <div class="footer"><p id="footerMessage">Thank you for your business.</p><div><span id="signatureLabel">Authorised signature</span></div></div>
       </article>
@@ -117,8 +127,8 @@
         <p>These details appear at the top of every document.</p>
         <label>Company name<input id="companyName" placeholder="AKVIRUS NETWORK PTE LTD"></label>
         <label>UEN / Registration no.<input id="companyReg"></label>
-        <label>Address<textarea id="companyAddress" rows="3"></textarea></label>
-        <div class="two"><label>Phone<input id="companyPhone"></label><label>Email<input id="companyEmail" type="email"></label></div>
+        <label>Address<textarea id="companyAddress" rows="3" placeholder="302 Sims Avenue, #01-11, SMART SUITES Singapore 387516"></textarea></label>
+        <div class="two"><label>Phone<input id="companyPhone" placeholder="6683 6666"></label><label>Email<input id="companyEmail" type="email" placeholder="ak_ops@akvirus.com"></label></div>
         <label>Bank / payment details<textarea id="bankDetails" rows="3"></textarea></label>
         <label>Default "Prepared by" name<input id="defaultPreparedBy" placeholder="e.g. ALAN KIONG"></label>
         <hr>
