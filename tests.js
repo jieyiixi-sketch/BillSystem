@@ -155,7 +155,9 @@ test('invoice format is activated without changing other document types', () => 
   assert.ok(css.includes('.paper.reference-format'));
   assert.ok(css.includes('.invoice-format .invoice-payment'));
   assert.ok(html.includes('id="quotationRef"'));
-  assert.ok(html.includes('Complexity<br>Solutions'));
+  assert.ok(html.includes('Complexity Solutions'));
+  assert.ok(!html.includes('<th>#</th>'));
+  assert.ok(!js.includes('<td></td>'));
   assert.ok(js.includes('302 Sims Avenue, #01-11, SMART SUITES Singapore 387516'));
   assert.ok(js.includes('ak_ops@akvirus.com'));
   assert.ok(js.includes('MayBank Singapore Limited'));

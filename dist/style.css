@@ -70,18 +70,16 @@ main { width: calc(100% - 245px); margin-left: 245px; }
 table { width: 100%; border-collapse: collapse; border: 1px solid #222; table-layout: fixed; }
 th { background: #e8edf1; color: #111; border: 1px solid #222; text-align: left; font-size: 11px; letter-spacing: .04em; padding: 10px 8px; }
 td { border: 1px solid #222; vertical-align: top; padding: 5px; }
-th:nth-child(1) { width: 28px; }
-th:nth-child(2) { width: 27%; }
-th:nth-child(3) { width: 36%; }
-th:nth-child(4) { width: 70px; }
-th:nth-child(5), th:nth-child(6) { width: 95px; }
-th:nth-child(7) { width: 34px; border-color: transparent; background: transparent; }
-td:nth-child(7) { border-color: transparent; }
+th:nth-child(1) { width: 27%; }
+th:nth-child(2) { width: 36%; }
+th:nth-child(3) { width: 70px; }
+th:nth-child(4), th:nth-child(5) { width: 95px; }
+th:nth-child(6) { width: 34px; border-color: transparent; background: transparent; }
+td:nth-child(6) { border-color: transparent; }
 td input, td textarea { width: 100%; border: 0; padding: 7px 3px; }
 td textarea { resize: none; overflow: hidden; }
 .reference-format td textarea { field-sizing: content; min-height: 45px; }
-td:nth-child(1) { text-align: center; color: var(--muted); }
-td:nth-child(5) input, td:nth-child(6) { text-align: right; }
+td:nth-child(4) input, td:nth-child(5) { text-align: right; }
 .remove { color: var(--danger); border: 0; padding: 4px 7px; }
 .add-row { margin-top: 10px; border-style: dashed; color: var(--blue); }
 
@@ -109,9 +107,9 @@ td:nth-child(5) input, td:nth-child(6) { text-align: right; }
 }
 .reference-format .company { position: static; align-items: flex-start; }
 .reference-format .company > div { position: relative; z-index: 2; color: #fff; }
-.reference-format .company h2 { color: #fff; font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-weight: 700; letter-spacing: 0; margin: 0 0 16px; }
-.reference-format .company p { color: #fff; max-width: 720px; font-family: Arial, Helvetica, sans-serif; font-size: 10px; line-height: 1.2; }
-.reference-format .company-mark { display: block; position: absolute; z-index: 2; top: 20px; right: 28px; color: #44b8df; font: 10px/0.8 Arial, Helvetica, sans-serif; text-align: left; }
+.reference-format .company h2 { color: #fff; font-family: "Aptos Narrow", "Arial Narrow", Arial, sans-serif; font-size: 18.667px; font-weight: 700; letter-spacing: 0; margin: 0 0 16px; }
+.reference-format .company p { color: #fff; max-width: 720px; font-family: "Aptos Narrow", "Arial Narrow", Arial, sans-serif; font-size: 10.667px; line-height: 1.2; }
+.reference-format .company-mark { display: block; position: absolute; z-index: 2; top: 20px; right: 28px; color: #44b8df; font: 8px/1 "Aptos Narrow", "Arial Narrow", Arial, sans-serif; white-space: nowrap; }
 .reference-format .doc-title {
   position: static; color: #142f43; text-align: right; margin: 8px 3px -7px;
 }
@@ -125,19 +123,19 @@ td:nth-child(5) input, td:nth-child(6) { text-align: right; }
 .reference-format .caption { color: #142f43; }
 .reference-format .meta-grid input,
 .reference-format .meta-grid textarea { border-bottom-color: #b7c4cc; }
-.reference-format .job-meta { border-color: #31546a; }
-.reference-format .job-meta label { border-color: #31546a; text-align: center; }
-.reference-format table { border-color: #42aee4; }
+.reference-format .job-meta { border-color: #000; }
+.reference-format .job-meta label { border-color: #000; text-align: center; }
+.reference-format table { border-color: #000; }
 .reference-format th {
-  background: #f2f2f2; border-color: #42aee4; color: #111;
+  background: #f2f2f2; border-color: #000; color: #111;
   text-align: center; font-size: 12px;
 }
-.reference-format td { border-color: #42aee4; }
+.reference-format td { border-color: #000; }
 .reference-format .below { margin-top: 18px; align-items: start; }
 .reference-format .notes-block { font-family: "Aptos Narrow", "Arial Narrow", Arial, sans-serif; font-size: 12px; }
-.reference-format .totals label { border: 1px solid #42aee4; border-bottom: 0; padding: 7px 5px; font-family: "Aptos Display", "Aptos Narrow", "Arial Narrow", Arial, sans-serif; }
-.reference-format .totals label:last-child { border-bottom: 1px solid #42aee4; }
-.reference-format .totals .grand { color: #111; font-size: 14px; border-bottom: 1px solid #42aee4; }
+.reference-format .totals label { border: 1px solid #000; border-bottom: 0; padding: 7px 5px; font-family: "Aptos Display", "Aptos Narrow", "Arial Narrow", Arial, sans-serif; }
+.reference-format .totals label:last-child { border-bottom: 1px solid #000; }
+.reference-format .totals .grand { color: #111; font-size: 14px; border-bottom: 1px solid #000; }
 .reference-format .footer { color: #142f43; font-family: "Aptos Narrow", "Arial Narrow", Arial, sans-serif; font-style: italic; margin-top: 42px; }
 .reference-format .footer > p { flex: 1; text-align: center; font-family: "Bradley Hand ITC", "Bradley Hand", cursive; font-size: 12px; color: #1d4c68; }
 .reference-format .footer div { width: 235px; }

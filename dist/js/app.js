@@ -50,7 +50,6 @@
     const { product = '', description = '', qty = 1, price = 0 } = item;
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td></td>
       <td><textarea class="product" rows="2" placeholder="e.g. Cat6 cabling">${esc(product)}</textarea></td>
       <td><textarea class="desc" rows="4" placeholder="Work description">${esc(description)}</textarea></td>
       <td><input class="qty" type="number" min="0" step="0.01" value="${esc(qty)}"></td>
@@ -64,16 +63,12 @@
     tr.querySelectorAll('input,textarea').forEach((i) => i.addEventListener('input', calculate));
     tr.querySelector('.remove').onclick = () => {
       tr.remove();
-      renumber();
       calculate();
       markDirty();
     };
     textareas.forEach(fit);
-    renumber();
     calculate();
   }
-
-  const renumber = () => $$('#items tr').forEach((r, i) => (r.cells[0].textContent = i + 1));
 
   function calculate() {
     const rows = $$('#items tr');
